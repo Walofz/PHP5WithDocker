@@ -23,7 +23,7 @@ RUN ln -fs /usr/lib/x86_64-linux-gnu/libldap.so /usr/lib/
 RUN ln -fs /usr/lib/x86_64-linux-gnu/libsybdb.a /usr/lib/
 
 RUN echo "Installing PHP extensions" \
-    && docker-php-ext-install iconv mcrypt gd pdo pdo_mysql pdo_dblib pdo_pgsql mssql pcntl zip bcmath simplexml xmlrpc soap pspell ldap mbstring \
+    && docker-php-ext-install iconv mcrypt gd pdo pdo_mysql pdo_dblib pdo_pgsql mssql pcntl zip bcmath simplexml xmlrpc soap pspell ldap mbstring opcache \
     && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
     && docker-php-ext-enable iconv mcrypt gd pdo pdo_mysql pdo_dblib pdo_pgsql mssql pcntl zip bcmath simplexml xmlrpc soap pspell ldap mbstring \
     && apt-get autoremove -y \
@@ -51,5 +51,7 @@ RUN apt-get autoremove -y \
     && rm -rf /usr/share/doc /usr/share/man /usr/share/locale \
     && rm -f /usr/local/etc/php-fpm.d/*.conf \
     && rm -rf /usr/src/php
+
+CMD ["php-fpm", "-F"]
 
 EXPOSE 9001
