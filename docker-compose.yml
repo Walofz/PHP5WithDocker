@@ -1,0 +1,41 @@
+version: '3.4'
+
+services:
+  php:
+    # build: ./php
+    image: walofz/php5.6-fpm:lastest
+    container_name: php5-fpm
+    restart: always
+    volumes:
+      - ./www:/var/www/html
+      - ./php/conf/php-fpm.conf:/usr/local/etc/php-fpm.conf:rw
+      - ./php/conf/php.ini:/usr/local/etc/php/php.ini:rw
+      - ./logs/php-fpm:/var/log/php-fpm:rw
+    networks:
+      - prod
+    expose:
+      - 9001
+  
+  nginx:
+    image: nginx:mainline-alpine
+    container_name: nginx-php5
+    restart: always
+    volumes:
+      - ./nginx/conf/nginx.conf:/etc/nginx/conf/nginx.conf:ro
+      - ./nginx/conf.d:/etc/nginx/conf.d:ro
+      - ./nginx/extend.d:/etc/nginx/extend.d:ro
+      - ./logs/nginx:/var/log/nginx
+    volumes_from:
+      - php
+    networks:
+      - prod
+    ports:
+      - 8081:80
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.nginx54.entrypoints=websecure"
+      - "traefik.http.routers.nginx54.rule=Host(`php54.devhost.io`)"
+
+networks:
+  prod:
+    name: proxy
