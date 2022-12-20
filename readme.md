@@ -4,7 +4,7 @@
 
 **PHP PDO Extension** 
 -
-**Base on :: walofz/php5.6-fpm:lastest**
+**Base on :: php:5.6-fpm**
 - mysql
 - sqlite
 - ldap
